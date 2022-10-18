@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = {"com.attguigu"})
 public class commonConfig {
     /**
-     * 分页插件1
+     * 分页插件
      */
     @Bean
     public PaginationInterceptor paginationInterceptor() {
