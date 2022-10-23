@@ -3,11 +3,9 @@ package com.atguigu.yygh.hosp.controller;
 
 import com.atguigu.yygh.model.hosp.HospitalSet;
 import com.atguigu.yygh.hosp.service.HospitalSetService;
-import com.atguigu.yygh.vo.hosp.HospitalQueryVo;
 import com.atguigu.yygh.vo.hosp.HospitalSetQueryVo;
 import com.attguigu.abcommon.config.R;
 import com.attguigu.abcommon.config.YyghException;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
@@ -17,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.DocFlavor;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -33,7 +29,7 @@ import java.util.Random;
  */
 @RestController
 @CrossOrigin // 跨域
-@RequestMapping("/hosp")
+@RequestMapping("/admin/hosp/hospitalSet")
 @Api(tags = "尚医通_医院信息接口")
 
 public class HospitalSetController {
@@ -51,11 +47,21 @@ public class HospitalSetController {
         return R.ok().data(map) ;
     }
 
+    @ApiOperation(value = "通过id查询")
+    @GetMapping("/selectById/{id}")
+    public R selectList(@PathVariable Long id){
+        HospitalSet hosp = hospitalSetService.getById(id);
+        return R.ok().data(hosp);
+    }
+
     @ApiOperation(value = "添加信息")
     @PostMapping("/saveHospSet")
     public R save(
             @ApiParam(required = true,value = "医院设置对象",name = "hospitalSet")
             @RequestBody HospitalSet hospitalSet){
+        if (StringUtils.isEmpty(hospitalSet)){
+            throw new YyghException("添加时异常",88);
+        }
         hospitalSet.setStatus(1);
         Random random = new Random();
         hospitalSet.setSignKey(System.currentTimeMillis()+""+random.nextInt(1000));
@@ -64,14 +70,14 @@ public class HospitalSetController {
     }
 
     @ApiOperation(value = "删除")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/remove/{id}")
     public R deleteById(@PathVariable Long id){
         hospitalSetService.removeById(id);
         return R.ok();
     }
 
     @ApiOperation(value = "带查询条件的分页")
-    @PostMapping("/{page}/{limit}")
+    @PostMapping("findPageQueryHospSet/{page}/{limit}")
     public R pageList(
             @ApiParam(name = "page",value = "当前页码",required = true)
             @PathVariable Long page,
@@ -126,17 +132,10 @@ public class HospitalSetController {
         }
     }
 
-
     //医院设置锁定和解锁
     @ApiOperation("设置医院状态")
     @PutMapping("/changHosStatus/{id}/{status}")
-    public R changHosStatus(@PathVariable Long id,@PathVariable Integer status){
-        try {
-            int i = 1/0;
-        } catch (Exception e) {
-            e.getStackTrace();
-            throw new YyghException("自定义异常",10110);
-        }
+    public R changHosStatus(@PathVariable Long id,@PathVariable Integer status ){
         HospitalSet hospitalSet = hospitalSetService.getById(id);
         hospitalSet.setStatus(status);
         boolean bool = hospitalSetService.updateById(hospitalSet);

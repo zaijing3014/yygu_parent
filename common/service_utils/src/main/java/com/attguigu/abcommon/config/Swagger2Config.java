@@ -1,6 +1,5 @@
 package com.attguigu.abcommon.config;
 
-import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -44,7 +43,7 @@ public class Swagger2Config {
                 .select()
                 //只显示admin路径下的页面
 //                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
-                .apis(RequestHandlerSelectors.basePackage("com.atguigu.yygh.hosp"))
+                .apis(RequestHandlerSelectors.basePackage("com.atguigu"))
                 //.paths(PathSelectors.regex("/admin/.*"))
                 .build()
                 .globalOperationParameters(pars);
