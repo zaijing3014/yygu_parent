@@ -19,6 +19,7 @@ public class ReadListener extends AnalysisEventListener<DictEeVo> {
     @Autowired
     private DictMapper dictMapper;
 
+
     private DictService dictService;
     public ReadListener(DictService dictService){
         this.dictService = dictService;

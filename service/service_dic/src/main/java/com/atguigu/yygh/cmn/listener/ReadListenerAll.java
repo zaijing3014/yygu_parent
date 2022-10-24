@@ -14,9 +14,11 @@ import java.util.List;
  * @author zzj
  * @date 2022/10/23
  */
+
 public class ReadListenerAll extends AnalysisEventListener<DictEeVo> {
 
     private DictService dictService;
+
     public ReadListenerAll(DictService dictService) {
         this.dictService = dictService;
     }

@@ -2,6 +2,7 @@ package com.atguigu.yygh.cmn.controller;
 
 
 import com.alibaba.excel.EasyExcel;
+import com.atguigu.yygh.cmn.listener.ReadListenerAll;
 import com.atguigu.yygh.cmn.service.DictService;
 import com.atguigu.yygh.model.cmn.Dict;
 import com.atguigu.yygh.vo.cmn.DictEeVo;
@@ -58,7 +59,7 @@ public class DictController {
     @ApiOperation(value = "导入")
     public R importDataAll(MultipartFile file){
         try {
-            EasyExcel.read(file.getInputStream(),DictEeVo.class,new ReadListenerAlls(dictService)).sheet().doRead();
+            EasyExcel.read(file.getInputStream(),DictEeVo.class,new ReadListenerAll(dictService)).sheet().doRead();
         } catch (IOException e) {
             e.printStackTrace();
         }
