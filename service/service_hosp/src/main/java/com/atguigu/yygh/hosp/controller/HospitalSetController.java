@@ -4,6 +4,7 @@ package com.atguigu.yygh.hosp.controller;
 import com.atguigu.yygh.model.hosp.HospitalSet;
 import com.atguigu.yygh.hosp.service.HospitalSetService;
 import com.atguigu.yygh.vo.hosp.HospitalSetQueryVo;
+import com.attguigu.abcommon.config.HttpRequestHelper;
 import com.attguigu.abcommon.config.R;
 import com.attguigu.abcommon.config.YyghException;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -62,11 +63,19 @@ public class HospitalSetController {
         if (StringUtils.isEmpty(hospitalSet)){
             throw new YyghException("添加时异常",88);
         }
-        hospitalSet.setStatus(1);
-        Random random = new Random();
-        hospitalSet.setSignKey(System.currentTimeMillis()+""+random.nextInt(1000));
-        hospitalSetService.save(hospitalSet);
-        return R.ok();
+        String sign = System.currentTimeMillis()+""+new Random().nextInt(1000);
+        hospitalSet.setSignKey(sign);
+        boolean isSave = hospitalSetService.save(hospitalSet);
+        if (isSave){
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("sign",sign);
+            map.put("hashcode",hospitalSet.getHoscode());
+            HttpRequestHelper.sendRequest(map,"http://localhost:9998/hospSet/updateSignKey");
+            return R.ok();
+        } else {
+            return R.error();
+        }
+
     }
 
     @ApiOperation(value = "删除")
